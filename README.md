@@ -32,7 +32,7 @@ async def connect_db():
     
     # for postgresql
     # import asyncpg # Import in the begining of the file
-    # db = await asyncpg.connect(user='username', password='password', database='database_name', host='localhost')
+    # connection = await asyncpg.connect(user='username', password='password', database='database_name', host='localhost')
     
     bot.db = connection
 
@@ -77,7 +77,7 @@ async def connect_db():
     
     # for postgresql
     # import asyncpg # Import in the begining of the file
-    # db = await asyncpg.connect(user='username', password='password', database='database_name', host='localhost')
+    # connection = await asyncpg.connect(user='username', password='password', database='database_name', host='localhost')
     
     bot.db = connection
 # Setup db for leveling
