@@ -82,8 +82,8 @@ async def connect_db():
     bot.db = connection
 # Setup db for leveling
 # As we assinged the database connection variabled named `db` that will be used for database
-# Connection must be made using aiosqlite for SQLite databse and asyncpg for PostgreSQL
 # Now set environment variable named `DISLEVEL_DB_CONN` and set value to the name of the variable assigned to the bot which is `db`
+# Note : Connection must be made using aiosqlite for SQLite databse and asyncpg for PostgreSQL
 os.environ['DISLEVEL_DB_CONN'] = 'db'
 
 TOKEN = 'TOKEN_HERE'
