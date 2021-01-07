@@ -112,3 +112,5 @@ Now exp will increase by 10
 
 Here amount must be an string of an integer.\
 Run the bot and run the `/rank` command to see your rank
+
+[Join Discord](https://discord.gg/7SaE8v2) For any kind of help
