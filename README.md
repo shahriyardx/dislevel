@@ -102,13 +102,13 @@ For increasing exp on every message
 
 `from dislevel import increase_xp`
 
-and then whenever you want to increase exp which maybe in `on_message`
-Put: `await increase_xp(message, bot)`
+and then whenever you want to increase exp which maybe in `on_message` \
+Put: `await increase_xp(message, bot)`\
 Here `message` is a `discord.Message` object and `bot` is the actual bot object
 
-By default it increases exp by 5 whenever `increase_xp` gets called but if you want a different rate then
-`await increase_xp(message, bot, rate=10)`
+By default it increases exp by 5 whenever `increase_xp` gets called but if you want a different rate then\
+`await increase_xp(message, bot, rate=10)`\
 Now exp will increase by 10
 
-Here amount must be an string of an integer.
+Here amount must be an string of an integer.\
 Run the bot and run the `/rank` command to see your rank
