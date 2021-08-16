@@ -79,5 +79,3 @@ Run the bot and run the `/rank` command to see your rank
 **/levelrole remove \<level\>** - `Remove a level role`
 
 [Join Discord](https://discord.gg/7SaE8v2) For any kind of help
-
-Test git
