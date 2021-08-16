@@ -20,7 +20,7 @@ setup(
     url="https://github.com/shahprog/dislevel/",
     author="Md Shahriyar Alam",
     author_email="mdshahriyaralam552@gmail.com",
-    license="MIT", 
+    license="MIT",
     classifiers=classifiers,
     keywords="discord discord-rank discord-profile discord-leveling",
     packages=find_packages(),

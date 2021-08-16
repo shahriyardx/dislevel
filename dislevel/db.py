@@ -2,7 +2,7 @@ async def prepare_db(bot):
     """Prepare database for leveling"""
     if bot.level_db_prepared:
         return
-    
+
     await bot.level_db.execute(
         """
         CREATE TABLE IF NOT EXISTS leveling(
@@ -22,7 +22,7 @@ async def update_data(member, row_id, exp, level, new_level, bot):
     """Update specific row with given data"""
     if new_level > level:
         level = new_level
-        bot.dispatch('level_up', member, level, exp)
+        bot.dispatch("level_up", member, level, exp)
 
     await bot.level_db.execute(
         "UPDATE leveling SET exp=:exp, level=:level WHERE id=:id",
