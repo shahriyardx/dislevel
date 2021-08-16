@@ -45,7 +45,6 @@ class Leveling(commands.Cog):
     async def leaderboard(self, ctx):
         """Get leaderboard data"""
         data = await get_leaderboard_data(self.bot, ctx.guild.id)
-        print(data)
         desc = ""
         pos = 0
         has_intent = self.bot.intents.members
@@ -57,7 +56,6 @@ class Leveling(commands.Cog):
                 try:
                     user = await ctx.guild.fetch_member(row[1])
                 except Exception as e:
-                    print(e)
                     continue
             if not user:
                 continue
@@ -91,7 +89,6 @@ class Leveling(commands.Cog):
             )
             await msg.edit(content="Background image has been set.")
         except Exception as e:
-            print(e)
             await msg.edit(
                 content="Unable to load image from provided link. Please provide a valid image url."
             )
