@@ -31,5 +31,6 @@ setup(
         "discord.py",
         "databases",
         "easy-pil",
+        "numerize"
     ],
 )

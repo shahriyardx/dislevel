@@ -1,3 +1,5 @@
+from numerize.numerize import numerize
+
 async def prepare_db(bot):
     """Prepare database for leveling"""
     if bot.level_db_prepared:
@@ -119,8 +121,21 @@ async def get_next_role(bot, guild, level):
             continue
 
         role_name = str(role)
+        break
 
     return role_name
+
+
+async def give_rep(bot, member):
+    await prepare_db(bot)
+
+    user_data = await get_data(member.id, member.guild.id, bot)
+    rep = user_data[5]
+
+    await bot.level_db.execute(
+        "UPDATE leveling SET rep=:rep WHERE id=:id",
+        {"rep": rep + 1, "id": user_data[0]},
+    )
 
 
 async def get_user_data(member, bot):
@@ -139,8 +154,8 @@ async def get_user_data(member, bot):
     next_role = await get_next_role(bot, member.guild, user_level)
 
     user_data = {
-        "current_user_exp": user_xp,
-        "next_level_exp": (user_level + 1) ** 5,
+        "current_user_exp": numerize(user_xp),
+        "next_level_exp": numerize((user_level + 1) ** 5),
         "percentage": percentage,
         "level": str(user_level),
         "rep": str(data[5]),
@@ -212,3 +227,18 @@ async def remove_level_role(bot, guild_id, level):
     )
 
     return "Level role removed."
+
+
+async def get_level_roles(bot, guild):
+    roles = await bot.level_db.fetch_all(
+        "SELECT * FROM leveling_roles WHERE guild_id=:guild_id ORDER BY level",
+        {"guild_id": guild.id},
+    )
+
+    the_roles = {}
+    for role in roles:
+        the_role = guild.get_role(role[2])
+        if the_role:
+            the_roles[role[3]] = the_role
+
+    return the_roles

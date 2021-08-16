@@ -9,10 +9,8 @@ Making leveling easier for small as well as big bot
 Making a simple bot with a db connection
 
 ```python
-import os
 from discord.ext import commands
-import aiosqlite
-
+from dislevel import increase_xp
 
 bot = commands.Bot(command_prefix='/')
 
@@ -24,31 +22,13 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    await bot.process_commands(message)
+    if not message.author.bot:
+        await bot.process_commands(message)
+        await increase_xp(message, bot, rate=5)
 
-
-async def connect_db():
-    connection = await aiosqlite.connect("leveling.db")
-    
-    # for postgresql
-    # import asyncpg # Import in the begining of the file
-    # connection = await asyncpg.connect(user='username', password='password', database='database_name', host='localhost')
-    
-    bot.db = connection
-
-# Setup db for leveling
-# As we assinged the database connection variabled named `db` that will be used for database
-# Now set environment variable named `DISLEVEL_DB_CONN` and set value to the name of the variable assigned to the bot which is `db`
-# Note : Connection must be made using aiosqlite for SQLite databse and asyncpg for PostgreSQL
-os.environ['DISLEVEL_DB_CONN'] = 'db'
-
-TOKEN = 'TOKEN_HERE'
-
-bot.loop.run_until_complete(connect_db())
-
-# Loading the cog/extension so we can use the functionality
 bot.load_extension('dislevel')
 
+TOKEN = 'TOKEN_HERE'
 bot.run(TOKEN)
 ```
 
@@ -56,8 +36,7 @@ bot.run(TOKEN)
 
 ```python
 from discord.ext import commands
-import aiosqlite
-import os
+from dislevel import increase_xp
 
 
 class MyCustomBot(commands.Bot):
@@ -68,49 +47,35 @@ class MyCustomBot(commands.Bot):
         print('We have logged in as {0.user}'.format(self.user))
 
     async def on_message(self, message):
-        self.process_commands(message)
+        if not message.author.bot:
+            self.process_commands(message)
+            await increase_xp(message, bot, rate=5)
     
 
 bot = MyCustomBot(command_prefix='/')
-async def connect_db():
-    connection = await aiosqlite.connect("leveling.db")
-    
-    # for postgresql
-    # import asyncpg # Import in the begining of the file
-    # connection = await asyncpg.connect(user='username', password='password', database='database_name', host='localhost')
-    
-    bot.db = connection
-# Setup db for leveling
-# As we assinged the database connection variabled named `db` that will be used for database
-# Now set environment variable named `DISLEVEL_DB_CONN` and set value to the name of the variable assigned to the bot which is `db`
-# Note : Connection must be made using aiosqlite for SQLite databse and asyncpg for PostgreSQL
-os.environ['DISLEVEL_DB_CONN'] = 'db'
 
-TOKEN = 'TOKEN_HERE'
-
-bot.loop.run_until_complete(connect_db())
-
-# Loading the cog/extension so we can use the functionality
 bot.load_extension('dislevel')
 
+TOKEN = 'TOKEN_HERE'
 bot.run(TOKEN)
 ```
 
 And setup is done it will automatically configure database and store data in your database
 
-For increasing exp on every message
-
-`from dislevel import increase_xp`
-
-and then whenever you want to increase exp which maybe in `on_message` \
-Put: `await increase_xp(message, bot)`\
-Here `message` is a `discord.Message` object and `bot` is the actual bot object
-
 By default it increases exp by 5 whenever `increase_xp` gets called but if you want a different rate then\
 `await increase_xp(message, bot, rate=10)`\
 Now exp will increase by 10
 
-Here amount must be an string of an integer.\
 Run the bot and run the `/rank` command to see your rank
+
+# Commands
+
+**/rank** - `See your rank`
+**/leaderboard, /lb** - `See leaderboard`
+**/setbg \<url\>** - `Set your bg url`
+**/resetbg** - `Reset your bg url to default`
+**/levelrole** - `Check level roles`
+**/levelrole add \<level\> \<role\>** - `Add a level role`
+**/levelrole remove \<level\>** - `Remove a level role`
 
 [Join Discord](https://discord.gg/7SaE8v2) For any kind of help
