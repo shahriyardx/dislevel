@@ -24,10 +24,12 @@ setup(
     classifiers=classifiers,
     keywords="discord discord-rank discord-profile discord-leveling",
     packages=find_packages(),
+    package_data={
+        "dislevel": ["assets/*.*"],
+    },
     install_requires=[
         "discord.py",
         "databases",
         "easy-pil",
     ],
-    include_package_data=True,
 )

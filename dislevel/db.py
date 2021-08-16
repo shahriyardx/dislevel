@@ -9,8 +9,21 @@ async def prepare_db(bot):
             id INTEGER PRIMARY KEY,
             user_id INTEGER NOT NULL,
             guild_id INTEGER NOT NULL,
-            exp INTEGER NOT NULL DEFAULT 0,
-            level INTEGER NOT NULL DEFAULT 1
+            exp INTEGER NOT NULL DEFAULT 1,
+            level INTEGER NOT NULL DEFAULT 1,
+            rep INTEGER NOT NULL DEFAULT 1,
+            bg_image TEXT NULL
+        )
+    """
+    )
+
+    await bot.level_db.execute(
+        """
+        CREATE TABLE IF NOT EXISTS leveling_roles(
+            id INTEGER PRIMARY KEY,
+            guild_id INTEGER NOT NULL,
+            role_id INTEGER NOT NULL,
+            level INTEGER NOT NULL
         )
     """
     )
@@ -22,6 +35,17 @@ async def update_data(member, row_id, exp, level, new_level, bot):
     """Update specific row with given data"""
     if new_level > level:
         level = new_level
+
+        level_role = await bot.level_db.fetch_one(
+            "SELECT * FROM leveling_roles WHERE guild_id=:guild_id AND level=:level",
+            {"guild_id": member.guild.id, "level": level},
+        )
+
+        if level_role:
+            role = member.guild.get_role(level_role[2])
+            if role:
+                await member.add_roles(role)
+
         bot.dispatch("level_up", member, level, exp)
 
     await bot.level_db.execute(
@@ -77,19 +101,52 @@ async def increase_xp(message, bot, rate=5):
         await update_data(message.author, user_data[0], exp, level, new_level, bot)
 
 
+async def get_next_role(bot, guild, level):
+    roles = await bot.level_db.fetch_all(
+        "SELECT * FROM leveling_roles WHERE guild_id=:guild_id AND level > :level",
+        {"guild_id": guild.id, "level": level},
+    )
+
+    role_name = None
+
+    for role in roles:
+        guild = bot.get_guild(role[1])
+        if not guild:
+            continue
+
+        role = guild.get_role(role[2])
+        if not role:
+            continue
+
+        role_name = str(role)
+
+    return role_name
+
+
 async def get_user_data(member, bot):
     await prepare_db(bot)
 
     data = await get_data(member.id, member.guild.id, bot)
+
+    user_xp = data[3]
+    user_level = data[4]
+    min_xp = user_level ** 5
+    next_level_exp = (user_level + 1) ** 5
+    xp_required = next_level_exp - min_xp
+    xp_have = user_xp - min_xp
+    percentage = (100 * xp_have) / xp_required
+
+    next_role = await get_next_role(bot, member.guild, user_level)
+
     user_data = {
-        "user_id": data[1],
-        "guild_id": data[2],
-        "current_user_exp": data[3],
-        "current_level_min_xp": data[4] ** 5,
-        "xp_required_for_next_level": (data[4] + 1) ** 5,
-        "xp_required": ((data[4] + 1) ** 5) - data[3],
-        "level": data[4],
-        "position": data[5],
+        "current_user_exp": user_xp,
+        "next_level_exp": (user_level + 1) ** 5,
+        "percentage": percentage,
+        "level": str(user_level),
+        "rep": str(data[5]),
+        "bg_image": str(data[6]),
+        "position": str(data[7]),
+        "next_role": next_role,
     }
 
     return user_data
@@ -109,3 +166,49 @@ async def get_leaderboard_data(bot, guild_id=None, is_global=False):
         )
 
     return data
+
+
+async def add_level_role(bot, guild_id, level, role_id):
+    """Assign a role to a level"""
+
+    await prepare_db(bot)
+
+    guild_role = await bot.level_db.fetch_one(
+        "SELECT * FROM leveling_roles WHERE guild_id=:guild_id AND role_id=:role_id",
+        {"guild_id": guild_id, "role_id": role_id},
+    )
+    if guild_role:
+        return f"This role has already been assigned to level `{guild_role[3]}`."
+
+    level_role = await bot.level_db.fetch_one(
+        "SELECT * FROM leveling_roles WHERE guild_id=:guild_id AND level=:level",
+        {"guild_id": guild_id, "level": level},
+    )
+
+    if level_role:
+        return f"This level already has a role assigned."
+
+    await bot.level_db.execute(
+        "INSERT INTO leveling_roles(guild_id, role_id, level) VALUES(:guild_id, :role_id, :level)",
+        {"guild_id": guild_id, "role_id": role_id, "level": level},
+    )
+
+    return "Level role added."
+
+
+async def remove_level_role(bot, guild_id, level):
+    """Remove a level role"""
+    level_role = await bot.level_db.fetch_one(
+        "SELECT * FROM leveling_roles WHERE guild_id=:guild_id AND level=:level",
+        {"guild_id": guild_id, "level": level},
+    )
+
+    if not level_role:
+        return f"No level role found on level `{level}`."
+
+    await bot.level_db.execute(
+        "DELETE FROM leveling_roles WHERE guild_id=:guild_id AND level=:level",
+        {"guild_id": guild_id, "level": level},
+    )
+
+    return "Level role removed."
