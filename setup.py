@@ -27,10 +27,5 @@ setup(
     package_data={
         "dislevel": ["assets/*.*"],
     },
-    install_requires=[
-        "discord.py",
-        "databases",
-        "easy-pil",
-        "numerize"
-    ],
+    install_requires=["discord.py", "databases", "easy-pil", "numerize"],
 )

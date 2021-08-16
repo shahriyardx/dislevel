@@ -7,7 +7,7 @@ from .db import (
     remove_level_role,
     get_level_roles,
     give_rep,
-    get_leaderboard_data
+    get_leaderboard_data,
 )
 from .card import get_card
 from easy_pil import run_in_executor, load_image_async
@@ -40,8 +40,8 @@ class Leveling(commands.Cog):
         file = File(fp=image, filename="card.png")
 
         await ctx.send(file=file)
-    
-    @commands.command(aliases=['lb'])
+
+    @commands.command(aliases=["lb"])
     async def leaderboard(self, ctx):
         """Get leaderboard data"""
         data = await get_leaderboard_data(self.bot, ctx.guild.id)
@@ -63,7 +63,7 @@ class Leveling(commands.Cog):
                 continue
             pos += 1
             desc += f"{pos}. {user.mention} | {row[3]}xp\n"
-        
+
         embed = Embed(title="Leaderboard", description=desc)
         embed.set_thumbnail(url=str(ctx.guild.icon_url))
 

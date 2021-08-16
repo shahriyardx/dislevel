@@ -1,5 +1,6 @@
 from numerize.numerize import numerize
 
+
 async def prepare_db(bot):
     """Prepare database for leveling"""
     if bot.level_db_prepared:
