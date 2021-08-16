@@ -13,23 +13,21 @@ classifiers = [
 
 setup(
     name="dislevel",
-    version="0.0.4",
+    version="0.0.5",
     description="A leveling cog for discord bots",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/shahprog/dislevel/",
     author="Md Shahriyar Alam",
     author_email="mdshahriyaralam552@gmail.com",
-    license="MIT",  # note the American spelling
+    license="MIT", 
     classifiers=classifiers,
-    keywords="discord discord-rank discord-profile discord-leveling",  # used when people are searching for a module, keywords separated with a space
+    keywords="discord discord-rank discord-profile discord-leveling",
     packages=find_packages(),
     install_requires=[
         "discord.py",
-        "disrank",
-        "requests",
-        "asyncpg",
-        "aiosqlite"
-    ],  # a list of other Python modules which this module depends on.  For example RPi.GPIO
+        "databases",
+        "easy-pil",
+    ],
     include_package_data=True,
 )

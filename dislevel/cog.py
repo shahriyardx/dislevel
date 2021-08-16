@@ -1,5 +1,5 @@
 from discord.ext import commands
-from dislevel.db import get_user_data
+from .db import get_user_data
 from discord import Member
 from disrank.generator import Generator
 from functools import partial
@@ -7,14 +7,16 @@ import asyncio
 import discord
 import os
 
+from databases import Database
+
 
 class Leveling(commands.Cog):
     """Leveling commands"""
 
     def __init__(self, bot):
         self.bot = bot
-        self.bot.level_db = getattr(self.bot, os.getenv("DISLEVEL_DB_CONN"))
-        self.bot._card_generator = Generator()
+        self.bot.level_db = Database("sqlite:///leveling.db")
+        self.bot.level_db_prepared = False
 
     def get_card(self, args):
         image = Generator().generate_profile(**args)
@@ -28,22 +30,26 @@ class Leveling(commands.Cog):
         user_data = await get_user_data(member, self.bot)
 
         args = {
-            'bg_image': '',
-            'profile_image': str(member.avatar_url_as(format='png')),
-            'level': user_data['level'],
-            'current_xp': user_data['current_level_min_xp'],
-            'user_xp': user_data['current_user_exp'],
-            'next_xp': user_data['xp_required_for_next_level'],
-            'user_position': user_data['position'],
-            'user_name': str(member),
-            'user_status': member.status.name,
+            "bg_image": "",
+            "profile_image": str(member.avatar_url_as(format="png")),
+            "level": user_data["level"],
+            "current_xp": user_data["current_level_min_xp"],
+            "user_xp": user_data["current_user_exp"],
+            "next_xp": user_data["xp_required_for_next_level"],
+            "user_position": user_data["position"],
+            "user_name": str(member),
+            "user_status": member.status.name,
         }
 
         func = partial(self.get_card, args)
         image = await asyncio.get_event_loop().run_in_executor(None, func)
 
-        file = discord.File(fp=image, filename='image.png')
+        file = discord.File(fp=image, filename="image.png")
         await ctx.send(file=file)
+
+    @commands.group(invoke_without_command=True)
+    async def leaderboard(self, ctx):
+        pass
 
 
 def setup(bot):
