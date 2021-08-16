@@ -1,4 +1,4 @@
 from dislevel.cog import *
-from dislevel.db import increase_xp, get_user_data
+from dislevel.db import increase_xp
 
-__version__ = "0.0.1"
+__version__ = "0.0.5"
