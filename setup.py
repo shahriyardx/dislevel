@@ -13,7 +13,7 @@ classifiers = [
 
 setup(
     name="dislevel",
-    version="1.0.0",
+    version="1.0.1",
     description="A leveling cog for discord bots",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
