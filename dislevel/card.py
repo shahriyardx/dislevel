@@ -27,23 +27,23 @@ def get_card(data):
     background.text(
         (135, 235),
         data["rep"],
-        font=Font().montserrat(size=24),
+        font=Font.montserrat(size=24),
         color="#ffffff",
         align="center",
     )
     background.text(
-        (275, 30), data["name"], font=Font().montserrat(size=50), color="#ffffff"
+        (275, 30), data["name"], font=Font.montserrat(size=50), color="#ffffff"
     )
     background.text(
         (275, 85),
         f'#{data["descriminator"]}',
-        font=Font().montserrat(size=20),
+        font=Font.montserrat(size=20),
         color="#BCBEC0",
     )
     background.text(
         (875, 42),
         f'#{data["position"]}',
-        font=Font().montserrat(size=45),
+        font=Font.montserrat(size=45),
         color="#ffffff",
         align="right",
     )
@@ -54,7 +54,7 @@ def get_card(data):
     background.text(
         (570, 226),
         f"{data['current_user_exp']} / {data['next_level_exp']}",
-        font=Font().montserrat(size=20),
+        font=Font.montserrat(size=20),
         color="white",
         align="center",
     )
@@ -62,7 +62,7 @@ def get_card(data):
     background.text(
         (275, 265),
         f"Level : {data['level']}",
-        font=Font().montserrat(size=18),
+        font=Font.montserrat(size=18),
         color="white",
         align="left",
     )
@@ -70,7 +70,7 @@ def get_card(data):
         background.text(
             (863, 265),
             f"Next Role : {data['next_role']}",
-            font=Font().montserrat(size=18),
+            font=Font.montserrat(size=18),
             color="white",
             align="right",
         )
