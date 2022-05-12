@@ -27,7 +27,7 @@ class Leveling(commands.Cog):
         user_data["profile_image"] = str(member.display_avatar.url)
         user_data["name"] = str(member).split("#")[0]
         user_data["descriminator"] = str(member).split("#")[1]
-        
+
         image = await run_in_executor(get_card, data=user_data)
         file = File(fp=image, filename="card.png")
 

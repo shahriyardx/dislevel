@@ -1,6 +1,7 @@
-from setuptools import find_packages, setup
-from pathlib import Path
 from importlib.util import module_from_spec, spec_from_file_location
+from pathlib import Path
+
+from setuptools import find_packages, setup
 
 # See note below for more information about classifiers
 classifiers = [
@@ -48,5 +49,5 @@ setup(
     package_data={
         "dislevel": ["assets/*.*"],
     },
-    install_requires=requirements
+    install_requires=requirements,
 )

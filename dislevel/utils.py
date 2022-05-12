@@ -129,6 +129,7 @@ async def update_xp(bot, member_id: int, guild_id: int, amount: int = 0) -> None
             },
         )
 
+
 async def delete_member_data(bot, member_id: int, guild_id: int) -> None:
     """Deletes a member's data. Usefull when you want to delete member's data if they leave server"""
     database: DbType = bot.dislevel_database
@@ -141,5 +142,5 @@ async def delete_member_data(bot, member_id: int, guild_id: int) -> None:
         {
             "guild_id": guild_id,
             "member_id": member_id,
-        }
-    ) 
+        },
+    )
