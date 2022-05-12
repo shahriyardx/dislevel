@@ -1,9 +1,11 @@
+from typing import Union
+
 from ._types import DbType
 
 LevelingTable: str = "dislevel_data"
 
 
-async def prepare_db(database: DbType):
+async def prepare_db(database: DbType) -> None:
     """Prepares the database for leveling"""
     try:
         await database.execute(
@@ -22,7 +24,21 @@ async def prepare_db(database: DbType):
         print(e)
 
 
-async def get_member_data(bot, member_id: int, guild_id: int):
+def get_percentage(data):
+    user_xp = data["xp"]
+    user_level = data["level"]
+    min_xp = user_level**5
+    next_level_xp = (user_level + 1) ** 5
+    xp_required = next_level_xp - min_xp
+    xp_have = user_xp - min_xp
+
+    data["percentage"] = (100 * xp_have) / xp_required
+    data["next_level_xp"] = next_level_xp
+
+    return data
+
+
+async def get_member_data(bot, member_id: int, guild_id: int) -> Union[dict, None]:
     """Returns data of an member"""
     database: DbType = bot.dislevel_database
     data = await database.fetch_one(
@@ -38,10 +54,32 @@ async def get_member_data(bot, member_id: int, guild_id: int):
     if not data:
         return None
 
-    return dict(data)
+    return get_percentage(dict(data))
 
 
-async def update_xp(bot, member_id: int, guild_id: int, amount: int = 0):
+async def get_member_position(bot, member_id: int, guild_id: int):
+    """Get position of a member"""
+    database: DbType = bot.dislevel_database
+    data = await database.fetch_all(
+        f"""SELECT  *
+             FROM   {LevelingTable} 
+            WHERE   guild_id = :guild_id 
+         ORDER BY   xp 
+             DESC
+        """,
+        {"guild_id": guild_id},
+    )
+
+    position = 0
+    for row in data:
+        position += 1
+        if member_id == row["member_id"]:
+            break
+
+    return position
+
+
+async def update_xp(bot, member_id: int, guild_id: int, amount: int = 0) -> None:
     """Increate xp of a member"""
     database: DbType = bot.dislevel_database
     user_data = await get_member_data(bot, member_id, guild_id)
@@ -90,3 +128,18 @@ async def update_xp(bot, member_id: int, guild_id: int, amount: int = 0):
                 "member_id": member_id,
             },
         )
+
+async def delete_member_data(bot, member_id: int, guild_id: int) -> None:
+    """Deletes a member's data. Usefull when you want to delete member's data if they leave server"""
+    database: DbType = bot.dislevel_database
+    await database.executec(
+        f"""
+        DELETE  FROM {LevelingTable}
+         WHERE  member_id = :member_id
+           AND  guild_id = :guild_id
+        """,
+        {
+            "guild_id": guild_id,
+            "member_id": member_id,
+        }
+    ) 
