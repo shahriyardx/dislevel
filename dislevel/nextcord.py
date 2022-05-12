@@ -40,7 +40,7 @@ class Leveling(commands.Cog):
 
         await ctx.send(file=file)
 
-    @commands.command()
+    @commands.command(aliases=['lb'])
     async def leaderboard(self, ctx: commands.Context):
         """See the server leaderboard"""
         leaderboard_data = await get_leaderboard_data(self.bot, ctx.guild.id)
