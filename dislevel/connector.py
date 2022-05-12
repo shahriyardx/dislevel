@@ -1,0 +1,23 @@
+from typing import Union
+
+from asyncpg.pool import Pool
+from databases import Database
+from discord.ext import commands
+from typing_extensions import Literal
+
+from ._db_adapter import DbAdapter
+from .utils import prepare_db
+
+
+async def connect_dislevel(
+    bot: Union[commands.Bot, commands.AutoShardedBot],
+    database: Union[Database, Pool],
+    driver: Literal["asyncpg", "databases"],
+):
+    if driver == "asyncpg":
+        database = DbAdapter(database)
+    else:
+        database = database
+
+    bot.dislevel_database = database
+    await prepare_db(database)

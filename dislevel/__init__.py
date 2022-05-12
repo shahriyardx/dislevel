@@ -1,3 +1,3 @@
-from dislevel.cog import Leveling
+from dislevel.connector import connect_dislevel
 
-__all__ = ["Leveling"]
+__all__ = ["connect_dislevel"]
