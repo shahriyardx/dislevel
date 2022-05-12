@@ -37,7 +37,7 @@ async def on_ready():
     await init_dislevel(bot, db, "databases") 
 
     # Load the cog. It has two cogs. `dislevel.nextcord`, `dislevel.dpy`
-    bot.load_extension("dislevel.nextcord")
+    bot.load_extension("dislevel.dpy")
 
     print("Ready! Let's go...")
 
