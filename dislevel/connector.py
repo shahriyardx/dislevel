@@ -8,7 +8,7 @@ from ._db_adapter import DbAdapter
 from .utils import prepare_db
 
 
-async def connect_dislevel(
+async def init_dislevel(
     bot,
     database: Union[Database, Pool],
     driver: Literal["asyncpg", "databases"],
