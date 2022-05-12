@@ -1,3 +1,5 @@
+asyncpg==0.25.0
+aiosqlite==0.17.0
 databases==0.5.5
 easy-pil==0.1.6
 numerize==0.12
