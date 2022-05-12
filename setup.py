@@ -3,7 +3,6 @@ from setuptools import find_packages, setup
 # See note below for more information about classifiers
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Education",
     "Operating System :: POSIX :: Linux",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: MacOS",
@@ -13,7 +12,7 @@ classifiers = [
 
 setup(
     name="dislevel",
-    version="1.0.1",
+    version="2.0.0b",
     description="A leveling cog for discord bots",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -27,5 +26,5 @@ setup(
     package_data={
         "dislevel": ["assets/*.*"],
     },
-    install_requires=["discord.py", "databases", "easy-pil", "numerize"],
+    install_requires=["easy-pil", "numerize"],
 )
