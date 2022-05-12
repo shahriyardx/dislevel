@@ -62,9 +62,12 @@ async def get_leaderboard_data(bot, guild_id: int):
     database: DbType = bot.dislevel_database
     data = await database.fetch_all(
         f"""
-        SELECT member_id, xp
-        FROM {LevelingTable}
-        WHERE guild_id = :guild_id
+        SELECT   member_id, xp
+        FROM     {LevelingTable}
+        WHERE    guild_id = :guild_id
+        ORDER BY xp
+        DESC
+        LIMIT 10
         """,
         {"guild_id": guild_id},
     )
@@ -167,10 +170,10 @@ async def set_bg_image(bot, member_id: int, guild_id: int, url) -> None:
     database: DbType = bot.dislevel_database
     await database.execute(
         f"""
-        UPDATE {LevelingTable}
-        SET bg_image = :bg_image
-        WHERE guild_id = :guild_id
-        AND member_id = :member_id 
+        UPDATE  {LevelingTable}
+        SET     bg_image = :bg_image
+        WHERE   guild_id = :guild_id
+        AND     member_id = :member_id 
         """,
         {"bg_image": url, "guild_id": guild_id, "member_id": member_id},
     )
