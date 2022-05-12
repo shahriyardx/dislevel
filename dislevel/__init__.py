@@ -1,4 +1,3 @@
-from dislevel.cog import *
-from dislevel.db import increase_xp
+from dislevel.cog import Leveling
 
-__version__ = "1.0.1"
+__all__ = ["Leveling"]
