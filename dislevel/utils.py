@@ -56,6 +56,22 @@ async def get_member_data(bot, member_id: int, guild_id: int) -> Union[dict, Non
 
     return get_percentage(dict(data))
 
+async def get_leaderboard_data(bot, guild_id: int):
+    """Get a guild's leaderboard data"""
+    database: DbType = bot.dislevel_database
+    data = await database.fetch_all(
+        f"""
+        SELECT member_id, xp
+        FROM {LevelingTable}
+        WHERE guild_id = :guild_id
+        """,
+        {
+            'guild_id': guild_id
+        }
+    )
+
+    guild_data = [dict(row) for row in data]
+    return guild_data
 
 async def get_member_position(bot, member_id: int, guild_id: int):
     """Get position of a member"""
