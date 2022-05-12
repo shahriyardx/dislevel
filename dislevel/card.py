@@ -20,19 +20,28 @@ def get_card(data):
 
     background = Editor(bg_image).resize((800, 240), crop=True)
 
-    font_40 = Font.poppins(size=40)
     font_25 = Font.poppins(size=25)
+    font_30 = Font.poppins(size=30)
+    font_40 = Font.poppins(size=40)
     font_40_bold = Font.poppins(size=40, variant="bold")
 
     background.paste(profile, (20, 20))
     background.text(
         (240, 20),
-        f"{data['name']}#{data['descriminator']}",
+        f"{data['name']}",
         font=font_40,
         color="white",
     )
+
+    background.text(
+        (240, 60),
+        f"#{data['descriminator']}",
+        font=font_30,
+        color="#9c9c9c",
+    )
+
     background.text((250, 170), "LVL", font=font_25, color="white")
-    background.text((310, 155), str(data["level"]), font=font_40_bold, color="white")
+    background.text((310, 160), str(data["level"]), font=font_40_bold, color="white")
 
     background.rectangle((390, 170), 360, 25, outline="white", stroke_width=2)
     background.bar(
@@ -42,13 +51,6 @@ def get_card(data):
         percentage=data["percentage"],
         fill="white",
         stroke_width=2,
-    )
-
-    background.text(
-        (275, 85),
-        f'#{data["descriminator"]}',
-        font=Font.montserrat(size=20),
-        color="#BCBEC0",
     )
     background.text(
         (875, 42),
