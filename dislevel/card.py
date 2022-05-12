@@ -14,7 +14,10 @@ def get_card(data):
     profile = Editor(profile_image).resize((200, 200))
 
     if data["bg_image"] and URL_REGEX.match(data["bg_image"]):
-        bg_image = load_image(data["bg_image"])
+        try:
+            bg_image = load_image(data["bg_image"])
+        except Exception as e:
+            bg_image = os.path.join(os.path.dirname(__file__), "assets", "bg.png")
     else:
         bg_image = os.path.join(os.path.dirname(__file__), "assets", "bg.png")
 

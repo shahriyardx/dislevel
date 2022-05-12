@@ -1,11 +1,18 @@
 from typing import Union
 
 from easy_pil.utils import run_in_executor
-from nextcord import File, Member, Embed
+from nextcord import Embed, File, Member
 from nextcord.ext import commands
 
+from ._types import DbType
 from .card import get_card
-from .utils import get_leaderboard_data, get_member_data, get_member_position
+from .utils import (
+    LevelingTable,
+    get_leaderboard_data,
+    get_member_data,
+    get_member_position,
+    set_bg_image,
+)
 
 
 class Leveling(commands.Cog):
@@ -32,15 +39,17 @@ class Leveling(commands.Cog):
         file = File(fp=image, filename="card.png")
 
         await ctx.send(file=file)
-    
+
     @commands.command()
     async def leaderboard(self, ctx: commands.Context):
         """See the server leaderboard"""
         leaderboard_data = await get_leaderboard_data(self.bot, ctx.guild.id)
 
         embed = Embed(title=f"Leaderboard", description="")
-        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/776345413132877854/974390375026401320/360_F_385427790_M4qA77J7nYgZCMP6Ezn9qo6PglF0j4mv-removebg-preview.png")
-        
+        embed.set_thumbnail(
+            url="https://cdn.discordapp.com/attachments/776345413132877854/974390375026401320/360_F_385427790_M4qA77J7nYgZCMP6Ezn9qo6PglF0j4mv-removebg-preview.png"
+        )
+
         position = 0
         for data in leaderboard_data:
             member = None
@@ -48,12 +57,25 @@ class Leveling(commands.Cog):
                 member = ctx.guild.get_member(data["member_id"])
             else:
                 member = await ctx.guild.fetch_member(data["member_id"])
-            
+
             if member:
                 position += 1
                 embed.description += f"{position}. {member.mention} - {data['xp']}"
 
         await ctx.send(embed=embed)
+
+    @commands.command()
+    async def setbg(self, ctx: commands.Context, *, url: str):
+        """Set image of your card bg."""
+        await set_bg_image(self.bot, ctx.author.id, ctx.guild.id, url)
+        await ctx.send("Background image has been updated")
+
+    @commands.command()
+    async def resetbg(self, ctx: commands.Context):
+        """Set image of your card bg."""
+        await set_bg_image(self.bot, ctx.author.id, ctx.guild.id, "")
+        await ctx.send("Background image has been set to default")
+
 
 def setup(bot):
     bot.add_cog(Leveling(bot))

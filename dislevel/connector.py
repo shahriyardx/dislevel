@@ -11,7 +11,7 @@ from .utils import prepare_db
 async def init_dislevel(
     bot,
     database: Union[Database, Pool],
-    driver: Literal["asyncpg", "databases"]="databases",
+    driver: Literal["asyncpg", "databases"] = "databases",
 ):
     if driver == "asyncpg":
         database = DbAdapter(database)
