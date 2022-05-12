@@ -1,6 +1,7 @@
 # Custom 
 bot/
 test_bot.py
+*.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
