@@ -6,77 +6,68 @@ Making leveling easier for small as well as big bot
 
 # Usage
 
-Making a simple bot with a db connection
+Making a simple bot with a db connection. First of all we need a database connection. Dislevel supports 2 type of database connection, 1. asyncpg (Pool) 2. databases (Database)
 
-```python
+If your bot already have a connection you can use that, Or you can create a new one for leveling. In this example I will create a new connection using databases[sqlite]
+
+
+```py
+from databases import Database
+from discord import Intents
 from discord.ext import commands
-from dislevel import increase_xp
 
-bot = commands.Bot(command_prefix='/')
+from dislevel import init_dislevel
+from dislevel.utils import update_xp
+
+intents = Intents.default()
+intents.messages = True # Message content intent must be enabled
+
+bot = commands.Bot(command_prefix="?", intents=intents)
 
 
 @bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(bot))
+    # Using databases to create a sqlite db
+    db = Database("sqlite:///leveling.db")
+    await db.connect()
+
+    # Pass instance of bot, the database connection and specify which driver to use. In this case we are using databases so we passed that
+    await init_dislevel(bot, db, "databases") 
+
+    # Load the cog. It has two cogs. `dislevel.nextcord`, `dislevel.dpy`
+    bot.load_extension("dislevel.nextcord")
+
+    print("Ready! Let's go...")
 
 
 @bot.event
 async def on_message(message):
-    if not message.author.bot:
-        await bot.process_commands(message)
-        await increase_xp(message, bot, rate=5)
-
-bot.load_extension('dislevel')
-
-TOKEN = 'TOKEN_HERE'
-bot.run(TOKEN)
-```
-
-### For subclassed bot
-
-```python
-from discord.ext import commands
-from dislevel import increase_xp
-
-
-class MyCustomBot(commands.Bot):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    async def on_ready(self):
-        print('We have logged in as {0.user}'.format(self.user))
-
-    async def on_message(self, message):
-        if not message.author.bot:
-            self.process_commands(message)
-            await increase_xp(message, bot, rate=5)
+    if message.author.bot:
+        return
     
+    # You can use this method anywhere to update xp of a member
+    # First pass the bot instance, member_id, guild_id and how much xp to be added.
+    await update_xp(bot, message.author.id, message.guild.id, amount=10)
 
-bot = MyCustomBot(command_prefix='/')
+    await bot.process_commands(message)
 
-bot.load_extension('dislevel')
-
-TOKEN = 'TOKEN_HERE'
+TOKEN: str = "Your bot token here"
 bot.run(TOKEN)
 ```
 
-And setup is done it will automatically configure database and store data in your database
-
-By default it increases exp by 5 whenever `increase_xp` gets called but if you want a different rate then\
-`await increase_xp(message, bot, rate=10)`\
-Now exp will increase by 10
-
-Run the bot and run the `/rank` command to see your rank
+# Events
+```py
+# If you want to do something when a user level's up!
+@bot.event
+async def on_dislevel_levelup(guild_id, member_id, level):
+    print(f"Member level up! ID: {member_id}")
+````
 
 # Commands
 
 **/rank** - `See your rank` \
-**/rep** - `Give reputation to someone` \
 **/leaderboard, /lb** - `See leaderboard` \
 **/setbg \<url\>** - `Set your bg url` \
 **/resetbg** - `Reset your bg url to default` \
-**/levelrole** - `Check level roles` \
-**/levelrole add \<level\> \<role\>** - `Add a level role` \
-**/levelrole remove \<level\>** - `Remove a level role`
 
 [Join Discord](https://discord.gg/7SaE8v2) For any kind of help
