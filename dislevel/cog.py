@@ -9,7 +9,7 @@ class Leveling(commands.Cog):
     Leveling commands
     """
 
-    def __init__(self, bot, database, driver: Literal["asyngpg", "databases"]):
+    def __init__(self, bot, database, driver: Literal["asyncpg", "databases"]):
         self.bot = bot
 
         if driver == "asyncpg":
