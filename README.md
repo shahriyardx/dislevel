@@ -6,7 +6,9 @@ Making leveling easier for small as well as big bot
 
 # Usage
 
-Making a simple bot with a db connection. First of all we need a database connection. Dislevel supports 2 type of database connection, 1. asyncpg (Pool) 2. databases (Database)
+Making a simple bot with a db connection. First of all we need a database connection. Dislevel supports 2 type of database connection, 
+- `asyncpg (Pool)`
+- `databases (Database)`
 
 If your bot already have a connection you can use that, Or you can create a new one for leveling. In this example I will create a new connection using databases[sqlite]
 
