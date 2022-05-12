@@ -65,9 +65,9 @@ async def on_dislevel_levelup(guild_id, member_id, level):
 
 # Commands
 
-**/rank** - `See your rank` \
-**/leaderboard, /lb** - `See leaderboard` \
-**/setbg \<url\>** - `Set your bg url` \
-**/resetbg** - `Reset your bg url to default` \
+**rank [member]** - `See your/member's rank` \
+**leaderboard, lb** - `See leaderboard` \
+**setbg \<url\>** - `Set your bg url` \
+**resetbg** - `Reset your bg url to default` \
 
 [Join Discord](https://discord.gg/7SaE8v2) For any kind of help
