@@ -1,3 +1,4 @@
-easy-pil==0.1.6
-numerize==0.12
-typing_extensions==4.2.0
+easy-pil>=0.1.6
+numerize>=0.12
+typing_extensions>=4.2.0
+python-dotenv>=0.20.0
