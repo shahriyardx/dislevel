@@ -1,6 +1,9 @@
+import os
 from typing import Union
 
-LevelingTable: str = "dislevel_data"
+leveling_table: str = os.environ.get(
+    "DISLEVEL_TABLE", os.environ["DISLEVEL_TABLE_DEFAULT"]
+)
 
 
 async def prepare_db(database) -> None:
@@ -8,7 +11,7 @@ async def prepare_db(database) -> None:
     try:
         await database.execute(
             f"""
-            CREATE TABLE IF NOT EXISTS {LevelingTable}(
+            CREATE TABLE IF NOT EXISTS {leveling_table}(
                 id          BIGSERIAL PRIMARY KEY,
                 member_id   BIGINT NOT NULL,
                 guild_id    BIGINT NOT NULL,
@@ -42,7 +45,7 @@ async def get_member_data(bot, member_id: int, guild_id: int) -> Union[dict, Non
     data = await database.fetch_one(
         f"""
         SELECT  * 
-        FROM    {LevelingTable} 
+        FROM    {leveling_table} 
         WHERE   guild_id = :guild_id 
         AND     member_id = :member_id
         """,
@@ -61,7 +64,7 @@ async def get_leaderboard_data(bot, guild_id: int):
     data = await database.fetch_all(
         f"""
         SELECT   member_id, xp
-        FROM     {LevelingTable}
+        FROM     {leveling_table}
         WHERE    guild_id = :guild_id
         ORDER BY xp
         DESC
@@ -79,7 +82,7 @@ async def get_member_position(bot, member_id: int, guild_id: int):
     database = bot.dislevel_database
     data = await database.fetch_all(
         f"""SELECT  *
-             FROM   {LevelingTable} 
+             FROM   {leveling_table} 
             WHERE   guild_id = :guild_id 
          ORDER BY   xp 
              DESC
@@ -108,7 +111,7 @@ async def update_xp(bot, member_id: int, guild_id: int, amount: int = 0) -> None
 
         await database.execute(
             f"""
-            UPDATE  {LevelingTable} 
+            UPDATE  {leveling_table} 
                 SET  xp = :xp, 
                     level = :level 
                 WHERE  member_id = :member_id 
@@ -134,7 +137,7 @@ async def update_xp(bot, member_id: int, guild_id: int, amount: int = 0) -> None
         level = int(amount ** (1 / 5))
         await database.execute(
             f"""
-            INSERT  INTO {LevelingTable}
+            INSERT  INTO {leveling_table}
                     (member_id, guild_id, xp, level) 
             VALUES  (:member_id, :guild_id, :xp, :level)
             """,
@@ -152,7 +155,7 @@ async def delete_member_data(bot, member_id: int, guild_id: int) -> None:
     database = bot.dislevel_database
     await database.executec(
         f"""
-        DELETE  FROM {LevelingTable}
+        DELETE  FROM {leveling_table}
          WHERE  member_id = :member_id
            AND  guild_id = :guild_id
         """,
@@ -168,7 +171,7 @@ async def set_bg_image(bot, member_id: int, guild_id: int, url) -> None:
     database = bot.dislevel_database
     await database.execute(
         f"""
-        UPDATE  {LevelingTable}
+        UPDATE  {leveling_table}
         SET     bg_image = :bg_image
         WHERE   guild_id = :guild_id
         AND     member_id = :member_id 
