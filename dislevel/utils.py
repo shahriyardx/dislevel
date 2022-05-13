@@ -1,11 +1,13 @@
 import os
 from typing import Union
 
-leveling_table: str = os.environ.get("DISLEVEL_TABLE")
+leveling_table: str = None
 
 
 async def prepare_db(database) -> None:
     """Prepares the database for leveling"""
+    leveling_table = os.environ.get("DISLEVEL_TABLE")
+
     try:
         await database.execute(
             f"""
@@ -40,6 +42,8 @@ def get_percentage(data):
 async def get_member_data(bot, member_id: int, guild_id: int) -> Union[dict, None]:
     """Returns data of an member"""
     database = bot.dislevel_database
+    leveling_table = os.environ.get("DISLEVEL_TABLE")
+
     data = await database.fetch_one(
         f"""
         SELECT  * 
@@ -59,6 +63,8 @@ async def get_member_data(bot, member_id: int, guild_id: int) -> Union[dict, Non
 async def get_leaderboard_data(bot, guild_id: int):
     """Get a guild's leaderboard data"""
     database = bot.dislevel_database
+    leveling_table = os.environ.get("DISLEVEL_TABLE")
+
     data = await database.fetch_all(
         f"""
         SELECT   member_id, xp
@@ -78,6 +84,8 @@ async def get_leaderboard_data(bot, guild_id: int):
 async def get_member_position(bot, member_id: int, guild_id: int):
     """Get position of a member"""
     database = bot.dislevel_database
+    leveling_table = os.environ.get("DISLEVEL_TABLE")
+
     data = await database.fetch_all(
         f"""SELECT  *
              FROM   {leveling_table} 
@@ -100,6 +108,8 @@ async def get_member_position(bot, member_id: int, guild_id: int):
 async def update_xp(bot, member_id: int, guild_id: int, amount: int = 0) -> None:
     """Increate xp of a member"""
     database = bot.dislevel_database
+    leveling_table = os.environ.get("DISLEVEL_TABLE")
+
     user_data = await get_member_data(bot, member_id, guild_id)
 
     if user_data:
@@ -151,6 +161,8 @@ async def update_xp(bot, member_id: int, guild_id: int, amount: int = 0) -> None
 async def delete_member_data(bot, member_id: int, guild_id: int) -> None:
     """Deletes a member's data. Usefull when you want to delete member's data if they leave server"""
     database = bot.dislevel_database
+    leveling_table = os.environ.get("DISLEVEL_TABLE")
+
     await database.executec(
         f"""
         DELETE  FROM {leveling_table}
@@ -167,6 +179,8 @@ async def delete_member_data(bot, member_id: int, guild_id: int) -> None:
 async def set_bg_image(bot, member_id: int, guild_id: int, url) -> None:
     """Set bg image"""
     database = bot.dislevel_database
+    leveling_table = os.environ.get("DISLEVEL_TABLE")
+
     await database.execute(
         f"""
         UPDATE  {leveling_table}
