@@ -1,7 +1,7 @@
 import os
 import re
 
-from easy_pil import Canvas, Editor, Font, load_image
+from easy_pil import Editor, Font, load_image
 from numerize.numerize import numerize
 
 URL_REGEX = re.compile(

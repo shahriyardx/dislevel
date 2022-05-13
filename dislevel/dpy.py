@@ -1,13 +1,11 @@
 from typing import Union
 
-from easy_pil.utils import run_in_executor
 from discord import Embed, File, Member
 from discord.ext import commands
+from easy_pil.utils import run_in_executor
 
-from ._types import DbType
 from .card import get_card
 from .utils import (
-    LevelingTable,
     get_leaderboard_data,
     get_member_data,
     get_member_position,
@@ -40,7 +38,7 @@ class Leveling(commands.Cog):
 
         await ctx.send(file=file)
 
-    @commands.command(aliases=['lb'])
+    @commands.command(aliases=["lb"])
     async def leaderboard(self, ctx: commands.Context):
         """See the server leaderboard"""
         leaderboard_data = await get_leaderboard_data(self.bot, ctx.guild.id)

@@ -1,14 +1,12 @@
 import re
 
-from asyncpg.pool import Pool
-
 
 class DbAdapter:
     """
     An adapter that allows databases type queries in asyncpg
     """
 
-    def __init__(self, pool: Pool):
+    def __init__(self, pool):
         self.pool = pool
 
     def get_data(self, query, values: dict = dict()):
