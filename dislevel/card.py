@@ -1,7 +1,7 @@
 import os
 import re
 
-from easy_pil import Editor, Font, load_image
+from easy_pil import Editor, Canvas, Font, load_image
 from numerize.numerize import numerize
 
 URL_REGEX = re.compile(
@@ -22,6 +22,9 @@ def get_card(data):
         bg_image = os.path.join(os.path.dirname(__file__), "assets", "bg.png")
 
     background = Editor(bg_image).resize((800, 240), crop=True)
+    overlay = Canvas((800, 240), color=(0, 0, 0, 100))
+
+    background.paste(overlay, (0, 0))
 
     font_25 = Font.poppins(size=25)
     font_30 = Font.poppins(size=30)
