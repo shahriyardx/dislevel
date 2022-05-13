@@ -45,12 +45,7 @@ class Leveling(commands.Cog):
         leaderboard_data = await get_leaderboard_data(self.bot, ctx.guild.id)
 
         embed = Embed(title=f"Leaderboard", description="")
-        embed.set_thumbnail(
-            url=os.environ.get(
-                "DISLEVEL_LEADERBOARD_ICON",
-                os.environ["DISLEVEL_LEADERBOARD_ICON_DEFAULT"],
-            )
-        )
+        embed.set_thumbnail(url=os.environ.get("DISLEVEL_LEADERBOARD_ICON"))
 
         position = 0
         for data in leaderboard_data:

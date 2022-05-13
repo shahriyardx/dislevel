@@ -1,9 +1,7 @@
 import os
 from typing import Union
 
-leveling_table: str = os.environ.get(
-    "DISLEVEL_TABLE", os.environ["DISLEVEL_TABLE_DEFAULT"]
-)
+leveling_table: str = os.environ.get("DISLEVEL_TABLE")
 
 
 async def prepare_db(database) -> None:
