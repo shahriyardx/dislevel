@@ -173,9 +173,5 @@ async def set_bg_image(bot, member_id: int, guild_id: int, url) -> None:
         WHERE   guild_id = :guild_id
         AND     member_id = :member_id 
         """,
-        {
-            "bg_image": url, 
-            "guild_id": guild_id, 
-            "member_id": member_id
-        },
+        {"bg_image": url, "guild_id": guild_id, "member_id": member_id},
     )
