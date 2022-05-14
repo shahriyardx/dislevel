@@ -67,7 +67,12 @@ bot.run(TOKEN)
 @bot.event
 async def on_dislevel_levelup(guild_id, member_id, level):
     print(f"Member level up! ID: {member_id}")
-````
+```
+
+# Cogs
+- `dislevel.discord` - For discord.py 2.0
+- `dislevel.nextcord` - For nextcord 2.0
+- `dislevel.nextcord.slash` - For nextcord 2.0 (Slash Commands)
 
 # Commands
 
