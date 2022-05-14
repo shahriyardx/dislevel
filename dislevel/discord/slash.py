@@ -1,9 +1,9 @@
 import os
 from typing import Optional, Union
 
+from discord import Embed, File, Interaction, Member, app_commands
+from discord.ext import commands
 from easy_pil.utils import run_in_executor
-from nextcord import Embed, File, Interaction, Member, slash_command
-from nextcord.ext import commands
 
 from ..card import get_card
 from ..utils import (
@@ -20,7 +20,7 @@ class LevelingSlash(commands.Cog):
     def __init__(self, bot: Union[commands.Bot, commands.AutoShardedBot]):
         self.bot = bot
 
-    @slash_command(description="Check rank of a user")
+    @app_commands.command(description="Check rank of a user")
     async def rank(self, interaction: Interaction, *, member: Optional[Member]):
         """Check rank of a user"""
         if not member:
@@ -37,9 +37,9 @@ class LevelingSlash(commands.Cog):
         image = await run_in_executor(get_card, data=user_data)
         file = File(fp=image, filename="card.png")
 
-        await interaction.send(file=file)
+        await interaction.response.send_message(file=file)
 
-    @slash_command(description="See the server leaderboard")
+    @app_commands.command(description="See the server leaderboard")
     async def leaderboard(self, interaction: Interaction):
         """See the server leaderboard"""
         leaderboard_data = await get_leaderboard_data(self.bot, interaction.guild.id)
@@ -59,20 +59,22 @@ class LevelingSlash(commands.Cog):
                 position += 1
                 embed.description += f"{position}. {member.mention} - {data['xp']}"
 
-        await interaction.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
-    @slash_command(description="Set image of your card bg")
+    @app_commands.command(description="Set image of your card bg")
     async def setbg(self, interaction: Interaction, *, url: str):
         """Set image of your card bg"""
         await set_bg_image(self.bot, interaction.user.id, interaction.guild.id, url)
-        await interaction.send("Background image has been updated")
+        await interaction.response.send_message("Background image has been updated")
 
-    @slash_command(description="Reset image of your card bg")
+    @app_commands.command(description="Reset image of your card bg")
     async def resetbg(self, interaction: Interaction):
         """Reset image of your card bg"""
         await set_bg_image(self.bot, interaction.user.id, interaction.guild.id, "")
-        await interaction.send("Background image has been set to default")
+        await interaction.response.send_message(
+            "Background image has been set to default"
+        )
 
 
-def setup(bot: commands.Bot):
-    bot.add_cog(LevelingSlash(bot))
+async def setup(bot: commands.Bot):
+    await bot.add_cog(LevelingSlash(bot))
