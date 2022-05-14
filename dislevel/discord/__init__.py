@@ -1,4 +1,4 @@
-from ._cog import Leveling
+from .._cog import Leveling
 
 
 async def setup(bot):
