@@ -23,8 +23,9 @@ from dislevel.utils import update_xp
 
 intents = Intents.default()
 # Nextcord current version uses discord Api v9 where message content intent is not enforced. 
-# If you ware are using discord.py when you will need to enable message_content intent manually as shown below
-intents.message_content = True
+
+# If you ware are using discord.py when you will need to enable message_content intent manually explicitly as shown below
+# intents.message_content = True
 
 bot = commands.Bot(command_prefix="?", intents=intents)
 
