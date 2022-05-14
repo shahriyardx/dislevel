@@ -4,9 +4,12 @@ Making leveling easier for small as well as big bot
 # Installation
 `pip install dislevel`
 
+# Check Examples [Here](https://github.com/shahriyardx/dislevel/tree/master/examples)
+
 # Usage
 
-Making a simple bot with a db connection. First of all we need a database connection. Dislevel supports 2 type of database connection, 
+Making a simple bot with a db connection. First of all we need a database connection. Dislevel supports 2 type of database connection.
+
 - `asyncpg (Pool)`
 - `databases (Database)`
 
@@ -52,9 +55,9 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-# Load the cog. It has three cogs. `dislevel.nextcord`, `dislevel.nextcord.slash`, `dislevel.discord`
+# Load the cog. It has 4 cogs. `dislevel.nextcord`, `dislevel.nextcord.slash`, `dislevel.discord`, `dislevel.discord.slash`
 # If you want to use nextcord.slash you should load it ouside on_ready. Otherwise you can load it inside on_ready
-# You can also load both
+# You can also load both slash and normal cog.
 bot.load_extension("dislevel.nextcord")
 
 TOKEN: str = "Your bot token here"
@@ -70,6 +73,8 @@ async def on_dislevel_levelup(guild_id, member_id, level):
 
 # Cogs
 - `dislevel.discord` - For discord.py 2.0
+- `dislevel.discord.slash` - For discord.py 2.0 (Slash Commands)
+
 - `dislevel.nextcord` - For nextcord 2.0
 - `dislevel.nextcord.slash` - For nextcord 2.0 (Slash Commands)
 
