@@ -36,11 +36,7 @@ async def on_ready():
     await db.connect()
 
     # Pass instance of bot, the database connection and specify which driver to use. In this case we are using databases so we passed that
-    await init_dislevel(bot, db, "databases") 
-
-    # Load the cog. It has two cogs. `dislevel.nextcord`, `dislevel.dpy`
-    bot.load_extension("dislevel.dpy")
-
+    await init_dislevel(bot, db, "databases")
     print("Ready! Let's go...")
 
 
@@ -54,6 +50,11 @@ async def on_message(message):
     await update_xp(bot, message.author.id, message.guild.id, amount=10)
 
     await bot.process_commands(message)
+
+# Load the cog. It has three cogs. `dislevel.nextcord`, `dislevel.nextcord.slash`, `dislevel.discord`
+# If you want to use nextcord.slash you should load it ouside on_ready. Otherwise you can load it inside on_ready
+# You can also load both
+bot.load_extension("dislevel.nextcord")
 
 TOKEN: str = "Your bot token here"
 bot.run(TOKEN)
