@@ -64,9 +64,8 @@ bot.run(TOKEN)
 # Events
 ```py
 # If you want to do something when a user level's up!
-@bot.event
 async def on_dislevel_levelup(guild_id, member_id, level):
-    print(f"Member level up! ID: {member_id}")
+    pass
 ```
 
 # Cogs
