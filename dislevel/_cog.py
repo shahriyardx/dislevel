@@ -63,12 +63,12 @@ class Leveling(commands.Cog):
 
     @commands.command()
     async def setbg(self, ctx: commands.Context, *, url: str):
-        """Set image of your card bg."""
+        """Set image of your card bg"""
         await set_bg_image(self.bot, ctx.author.id, ctx.guild.id, url)
         await ctx.send("Background image has been updated")
 
     @commands.command()
     async def resetbg(self, ctx: commands.Context):
-        """Set image of your card bg."""
+        """Reset image of your card bg"""
         await set_bg_image(self.bot, ctx.author.id, ctx.guild.id, "")
         await ctx.send("Background image has been set to default")
