@@ -1,26 +1,47 @@
 import os
-from typing import Union
+from typing import List, Union
+
+from ._models import Field
 
 leveling_table: str = None
 
 
-async def prepare_db(database) -> None:
+async def prepare_db(database, additional_fields: List[Field] = list()) -> None:
     """Prepares the database for leveling"""
     leveling_table = os.environ.get("DISLEVEL_TABLE")
 
+    default_fields = [
+        Field(name="id", type="BIGSERIAL", primary=True),
+        Field(name="member_id", type="BIGINT", null=False),
+        Field(name="guild_id", type="BIGINT", null=False),
+        Field(name="xp", type="BIGINT", null=False, default=0),
+        Field(name="level", type="BIGINT", null=False, default=1),
+        Field(name="bg_image", type="TEXT"),
+    ]
+
+    all_fields = default_fields + additional_fields
+    field_schema = ""
+
+    for index, field in enumerate(all_fields):
+        statement = f"{field.name} {field.type}"
+
+        if field.primary:
+            statement += " PRIMARY KEY"
+
+        if not field.null:
+            statement += " NOT NULL"
+
+        if field.default != None:
+            statement = f"{statement} DEFAULT %r" % field.default
+
+        field_schema += statement + (", " if index < len(all_fields) - 1 else "")
+
+    schema = f"CREATE TABLE IF NOT EXISTS {leveling_table}({field_schema})"
+
+    print(schema)
+
     try:
-        await database.execute(
-            f"""
-            CREATE TABLE IF NOT EXISTS {leveling_table}(
-                id          BIGSERIAL PRIMARY KEY,
-                member_id   BIGINT NOT NULL,
-                guild_id    BIGINT NOT NULL,
-                xp          BIGINT NOT NULL DEFAULT 1,
-                level       BIGINT NOT NULL DEFAULT 1,
-                bg_image    TEXT NULL
-            )
-            """
-        )
+        await database.execute(schema)
     except Exception as e:
         print(e)
 
