@@ -57,7 +57,7 @@ class LevelingSlash(commands.Cog):
 
             if member:
                 position += 1
-                embed.description += f"{position}. {member.mention} - {data['xp']}"
+                embed.description += f"{position}. {member.mention} - {data['xp']}\n"
 
         await interaction.send(embed=embed)
 
