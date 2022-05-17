@@ -38,8 +38,6 @@ async def prepare_db(database, additional_fields: List[Field] = list()) -> None:
 
     schema = f"CREATE TABLE IF NOT EXISTS {leveling_table}({field_schema})"
 
-    print(schema)
-
     try:
         await database.execute(schema)
     except Exception as e:
