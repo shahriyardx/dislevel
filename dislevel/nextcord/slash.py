@@ -65,13 +65,13 @@ class LevelingSlash(commands.Cog):
     async def setbg(self, interaction: Interaction, *, url: str):
         """Set image of your card bg"""
         await set_bg_image(self.bot, interaction.user.id, interaction.guild.id, url)
-        await interaction.send("Background image has been updated")
+        await interaction.send(ephemeral=True, content=f"Background image has been updated")
 
     @slash_command(description="Reset image of your card bg")
     async def resetbg(self, interaction: Interaction):
         """Reset image of your card bg"""
         await set_bg_image(self.bot, interaction.user.id, interaction.guild.id, "")
-        await interaction.send("Background image has been set to default")
+        await interaction.send(ephemeral=True, content=f"Background image has been set to default")
 
 
 def setup(bot: commands.Bot):
