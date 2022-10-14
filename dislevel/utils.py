@@ -17,6 +17,9 @@ async def prepare_db(database, additional_fields: List[Field] = list()) -> None:
         Field(name="xp", type="BIGINT", null=False, default=0),
         Field(name="level", type="BIGINT", null=False, default=1),
         Field(name="bg_image", type="TEXT"),
+        Field(name="text_color", type="TEXT"),
+        Field(name="text_color2", type="TEXT"),
+        Field(name="text_color3", type="TEXT"), 
     ]
 
     all_fields = default_fields + additional_fields
@@ -208,4 +211,37 @@ async def set_bg_image(bot, member_id: int, guild_id: int, url) -> None:
         AND     member_id = :member_id 
         """,
         {"bg_image": url, "guild_id": guild_id, "member_id": member_id},
+    )
+
+async def set_text_color(bot, member_id: int, guild_id: str, color, color2, color3) -> None:
+    """Set text color"""
+    database = bot.dislevel_database
+    leveling_table = os.environ.get("DISLEVEL_TABLE")
+
+    await database.execute(
+        f"""
+        UPDATE  {leveling_table}
+        SET     text_color = :text_color
+        WHERE   guild_id = :guild_id
+        AND     member_id = :member_id 
+        """,
+        {"text_color": color, "guild_id": guild_id, "member_id": member_id},
+    )
+    await database.execute(
+        f"""
+        UPDATE  {leveling_table}
+        SET     text_color2 = :text_color2
+        WHERE   guild_id = :guild_id
+        AND     member_id = :member_id 
+        """,
+        {"text_color2": color2, "guild_id": guild_id, "member_id": member_id},
+    )
+    await database.execute(
+        f"""
+        UPDATE  {leveling_table}
+        SET     text_color3 = :text_color3
+        WHERE   guild_id = :guild_id
+        AND     member_id = :member_id 
+        """,
+        {"text_color3": color3, "guild_id": guild_id, "member_id": member_id},
     )
